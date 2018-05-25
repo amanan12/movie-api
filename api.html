@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>API Call</title>
+	<link rel="stylesheet" href="api.css">
+</head>
+<body style="background-color: rgb(66, 63, 63);">
+
+	<div class="container">
+
+		<div class="nav">
+			<p>Movies</p>
+		</div>
+
+		<center>
+
+			<input id="mName" class="form-control" type="text" placeholder="Movie Name" onkeypress="myFunction()" />
+
+			<div class="row"></div>
+
+		</center>
+
+	</div>
+
+
+	<script src="https://code.jquery.com/jquery.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+	<script type="text/javascript">
+		
+		function myFunction(event){
+
+			var x = window.event.keyCode;
+
+			if(x == 13){  
+
+				updateUI();
+
+			}	
+
+		}
+
+		function updateUI(){
+
+			var a = $("#mName").val().toLowerCase();
+
+			if(a.length < 2){
+				alert("Please enter a valid Movie name.");
+			} else {
+
+				$.ajax( "http://localhost:8081/Movies", {
+					method: "POST",
+					data: {
+						name: a
+					},
+					success: function(results){
+						
+						var movies = results.data.Search;
+
+						var str = "";
+
+						movies.forEach(function(mov){
+
+							console.log(mov);
+
+							str += `<div class="col-lg-4"><img src="${mov.Poster}" /><br /><h3>${mov.Title}</h3></div>`;
+
+						});
+
+						$(".row").html(str);
+
+					},
+					error: function(err){
+						console.log(err);
+					}
+				});
+
+				$("#mName").val("");
+
+			}
+
+		}
+
+
+
+
+// 		$.getJSON( "http://www.omdbapi.com/?apikey=d84188da&s=" + a , function(data){
+
+// var str = "";
+
+// var val = data.Search;
+
+// val.forEach(function(a){
+
+// 	str += `<div class="col-lg-4"><img src="${a.Poster}" /><br /><h3>${a.Title}</h3></div>`;
+
+// });
+
+// $(".row").html(str);
+
+// });
+
+
+
+
+	</script>
+
+</body>
+</html>
